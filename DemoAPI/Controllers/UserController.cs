@@ -1,6 +1,7 @@
 ﻿using MediatorDemoLibrary.Commands;
 using MediatorDemoLibrary.Models;
 using MediatorDemoLibrary.Queries;
+using MediatorDemoLibrary.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,12 @@ namespace DemoAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, ILogger<UserController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         // GET: api/<UserController>
@@ -46,6 +49,9 @@ namespace DemoAPI.Controllers
         [HttpPut("{id}")]
         public async Task<UserModel> Put(int id, [FromBody] UserModel value)
         {
+            _logger.LogCritical("Before Update (:");
+            await _mediator.Publish(new UserUpdateNotification ($"{value.Id}" ));
+            _logger.LogCritical("After Update :)");
             return await _mediator.Send(request:new UpdateUserCommand(value.Id, value.Name,value.Email));
         }
 

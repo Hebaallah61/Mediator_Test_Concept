@@ -40,6 +40,7 @@ namespace DemoAPI.Controllers
         [HttpPost]
         public async Task<UserModel> Post([FromBody] UserModel value)
         {
+
             //var model= new InsertUserCommand(value.Name, value.Email);
             //return await _mediator.Send(model);
             return await _mediator.Send(request:new InsertUserCommand(value.Name, value.Email));

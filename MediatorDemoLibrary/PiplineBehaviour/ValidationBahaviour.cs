@@ -21,7 +21,7 @@ namespace MediatorDemoLibrary.PiplineBehaviour
         }
 
 
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             Debug.WriteLine("ValidationBehaviour invoked");
 
@@ -35,22 +35,15 @@ namespace MediatorDemoLibrary.PiplineBehaviour
                                 .ToList();
             if (failures.Any())
             {
-                //throw new FluentValidation.ValidationException(failures); //should be bad request not exception
 
                 var errorResponse = new ErrorResponse(Message: "Validation failed.", Errors: failures.Select(failure => failure.ErrorMessage).ToList());
                
 
                 throw new FluentValidation.ValidationException(errorResponse.Message, failures);
-                //var validationProblemDetails = new ValidationProblemDetails
-                //{
-                //    Status = 400,
-                //    Title = "One or more validation errors occurred.",
-                //    //Errors = failures.ToDictionary(error => error.PropertyName, error => new[] { error.ErrorMessage })
-                //};
-
-                //return validationProblemDetails as Task<TResponse>;   
+               
             }
-            return next();
+
+            return await next();
             //post
         }
     }

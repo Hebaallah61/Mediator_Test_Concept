@@ -11,6 +11,9 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using FluentValidation.AspNetCore;
 
+using MediatR.Pipeline;
+using MediatorDemoLibrary.Handlers;
+
 namespace DemoAPI
 {
     public class Program
@@ -32,7 +35,6 @@ namespace DemoAPI
             });
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBahaviour<,>));
             //RegisterValidators(typeof(InsertUserCommandValidator).Assembly, builder.Services);
-
 
             var app = builder.Build();
 

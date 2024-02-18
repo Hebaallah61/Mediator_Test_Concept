@@ -1,9 +1,12 @@
-﻿using MediatorDemoLibrary.Commands;
+﻿using FluentValidation;
+using MediatorDemoLibrary.Commands;
+
 using MediatorDemoLibrary.Models;
 using MediatorDemoLibrary.Queries;
 using MediatorDemoLibrary.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,10 +40,10 @@ namespace DemoAPI.Controllers
         }
 
         // POST api/<UserController>
-        [HttpPost]
+        [HttpPost("authorize")]
         public async Task<UserModel> Post([FromBody] UserModel value)
         {
-
+            
             //var model= new InsertUserCommand(value.Name, value.Email);
             //return await _mediator.Send(model);
             return await _mediator.Send(request:new InsertUserCommand(value.Name, value.Email));
@@ -48,6 +51,7 @@ namespace DemoAPI.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
+
         public async Task<UserModel> Put(int id, [FromBody] UserModel value)
         {
             _logger.LogCritical("Before Update (:");
@@ -57,9 +61,11 @@ namespace DemoAPI.Controllers
         }
 
         // DELETE api/<UserController>/5
+        
         [HttpDelete("{id}")]
         public async Task<List<UserModel>> Delete(int id)
         {
+
             return await _mediator.Send(request: new DeleteUserCommand(id));
         }
     }
